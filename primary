@@ -1,0 +1,69 @@
+// needs updating
+struct SwiftBank{
+  private let password: String
+
+  init(password:String, initialDeposit: Double){
+    self.password = password
+    makeDeposit(ofAmount: initialDeposit)
+  }
+  //helper method
+  private func isValid(_ enteredPassword: String) -> Bool{
+    if enteredPassword == password{
+      return true
+    } else{
+      return false
+    }
+  }
+
+  private var balance: Double = 0{
+    didSet{
+      displayLowBalanceMessage()
+    }
+  }
+//type property
+static let depositBonusRate = 0.01
+
+//second helper method
+private func finalDepositWithBonus(fromInitialDeposit deposit: Double) -> Double{
+  return deposit + (deposit * SwiftBank.depositBonusRate)
+}
+
+mutating func makeDeposit(ofAmount depositAmount: Double) {
+  let depositWithBonus = finalDepositWithBonus(fromInitialDeposit: depositAmount)
+  print("Making a deposit of $\(depositAmount) with a bonus rate. The final amount deposited is $\(depositWithBonus).")
+  self.balance += depositWithBonus
+}
+// withdraw function
+mutating func makeWithdraw(ofAmount withdrawAmount: Double){
+self.balance -= withdrawAmount
+print("You withdrew $\(withdrawAmount). Your new balance is $\(self.balance)")
+}
+func displayBalance(usingPassword password: String) {
+  if isValid(password) != true{
+print("Error: Invalid password. Cannot retrieve balance.")
+return
+  } else{
+    print("Your current balance is $\(balance)")
+  }
+}
+
+private func displayLowBalanceMessage(){
+  if self.balance < 100 {
+    print("Your balance is under $100")
+  }
+}
+
+}
+
+//initial deposit of $500 and a password of your choice.
+var myAccount = SwiftBank(password:"1234", initialDeposit: 500)
+//Make another deposit of $50
+myAccount.makeDeposit(ofAmount: 50)
+//Make a withdrawal of $100 using an incorrect password. 
+myAccount.makeWithdraw(ofAmount: 100, usingPassword: "hi")
+//test low balance method
+//myAccount.makeWithdraw(ofAmount: 420)
+//same withdrawal with the correct password
+
+
+//Confirm we have the correct account balance by checking your balance using the displayBalance(usingPassword:) method.
